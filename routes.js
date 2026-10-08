@@ -1,4 +1,4 @@
-export const bands = [{ label: 'Under 5 km', min: 0, max: 5 }, { label: '5–10 km', min: 5, max: 10 }, { label: '10–20 km', min: 10, max: 20 }, { label: '20–30 km', min: 20, max: 30 }, { label: '30–50 km', min: 30, max: 50 }, { label: '50–70 km', min: 50, max: 70 }, { label: '70–100 km', min: 70, max: 100 }, { label: '100 km+', min: 100, max: Infinity }];
+export const bands = [{ label: 'Under 5 km', min: 0, max: 5 }, { label: '5–10 km', min: 5, max: 10 }, { label: '10–20 km', min: 10, max: 20 }, { label: '20–30 km', min: 20, max: 30 }, { label: '30–50 km', min: 30, max: 50 }, { label: '50–70 km', min: 50, max: 70 }, { label: '70–100 km', min: 70, max: 100 }, { label: '100+ km', min: 100, max: Infinity }];
 export const colors = ['#da532c', '#197e78', '#9a5bb4', '#3064bf', '#a56b13', '#cb3c80', '#447b2e', '#5745b8'];
 export function bandOf(km) { return bands.findIndex(b => km >= b.min && km < b.max); }
 export function distanceOf(segments) { let d = 0; const rad = Math.PI / 180; for (const seg of segments)
