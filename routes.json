@@ -1,6 +1,10 @@
 {
   "routes": [
           {
+      "file": "gpx/Trekking-MaltaNorthToSouth-sandroazzopardi.gpx",
+      "name": "Malta - North to South"
+    },
+      {
       "file": "gpx/Trekking-SiggiewitoValletta-NorthernCoast-sandroazzopardi.gpx",
       "name": "Siggiewi to Valletta - Along the Northern Coast - Preparation for Round Malta"
     },
