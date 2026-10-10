@@ -8,14 +8,6 @@
       "file": "    gpx/Trekking-SiggiewiToCirkewwa-sandroazzopardi.gpx",
       "name": "Siggiewi to Cirkewwa"
     },
-      {
-      "file": "gpx/Trekking-SiggiewitoValletta-NorthernCoast-sandroazzopardi.gpx",
-      "name": "Siggiewi to Valletta - Northern Coast - Preparation for Round Malta"
-    },
-    {
-      "file": "gpx/Trekking-VallettaToSiggiewi-sandroazzopardi.gpx",
-      "name": "Valletta to Siggiewi - Southern Coast - Preparation for Round Malta"
-    },
      {
       "file": "gpx/Trekking-VallettaToSiggiewi-SouthernCoast-sandroazzopardi.gpx",
       "name": "Siggiewi to Birgu - Southern Coast"
@@ -27,6 +19,14 @@
     {
       "file": "gpx/suuntoapp-Trekking-2025-04-12T04-24-01Z-track.gpx",
       "name": "Round Gozo"
+    },
+    {
+      "file": "gpx/Trekking-SiggiewitoValletta-NorthernCoast-sandroazzopardi.gpx",
+      "name": "Siggiewi to Valletta - Northern Coast - Preparation for Round Malta"
+    },
+    {
+      "file": "gpx/Trekking-VallettaToSiggiewi-sandroazzopardi.gpx",
+      "name": "Valletta to Siggiewi - Southern Coast - Preparation for Round Malta"
     },
        {
       "file": "gpx/Trekking-RoundMalta-sandroazzopardi.gpx",
