@@ -151,6 +151,48 @@
         font-size: 23px;
       }
     }
+
+    /* Header navigation */
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-left: auto;
+}
+
+.header-nav .header-link {
+  white-space: nowrap;
+}
+
+.gear-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,0.45);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.gear-link:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+/* Mobile adjustments */
+
+@media (max-width: 620px) {
+  .header-nav {
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .gear-link {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+    
   </style>
 </head>
 
@@ -178,12 +220,20 @@
         GO FURTHER · EXPLORE MORE
       </span>
 
-      <a
-        class="header-link"
-        href="https://sandroazzopardi.com/"
-      >
-        Sandro Azzopardi
-      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+
+  <a class="header-link gear-link" href="/gear/">
+    My Gear
+  </a>
+
+  <a
+    class="header-link"
+    href="https://sandroazzopardi.com/"
+  >
+    Sandro Azzopardi
+  </a>
+
+</nav>
 
     </header>
 
