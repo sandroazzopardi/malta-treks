@@ -10,7 +10,28 @@ function safetyWarning(){const box=node('div','safety-warning');box.style.cssTex
 function fit(all=false){if(!map)return;const list=visible(),r=!all&&selected?list.find(r=>r.id===selected):null;const points=(r?[r]:list).flatMap(r=>r.segments.flat());if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[45,45],maxZoom:15});else map.setView([35.94,14.39],11)}
 function select(id){selected=selected===id?null:id;render();fit()}
 function renderFilters(){const root=$('filters');root.replaceChildren();const all=node('button','filter all '+(!filters.size?'chosen':''));all.append(document.createTextNode('All distances'),node('span','',String(routes.length)));all.setAttribute('aria-pressed',String(!filters.size));all.onclick=()=>{filters.clear();selected=null;render();fit(true)};root.append(all);bands.forEach((b,i)=>{const button=node('button','filter '+(filters.has(i)?'chosen':'')),dot=node('span','dot');dot.style.background=colors[i];button.append(dot,document.createTextNode(b.label),node('span','count',String(routes.filter(r=>bandOf(r.distance)===i).length)));button.setAttribute('aria-pressed',String(filters.has(i)));button.onclick=()=>{filters.has(i)?filters.delete(i):filters.add(i);selected=null;render();fit(true)};root.append(button)});$('clear').hidden=!filters.size}
-function renderDetail(){const root=$('detail'),r=visible().find(r=>r.id===selected);root.replaceChildren();root.hidden=!r;if(!r)return;const close=node('button','detail-close','×');close.setAttribute('aria-label','Close route details');close.onclick=()=>{selected=null;render();fit(true)};root.append(close,node('span','eyebrow','SELECTED TREK'),node('h2','',r.name));const bottom=node('div','detail-bottom'),meta=node('div');const strong=node('strong','',r.distance.toFixed(1)+' ');strong.append(node('small','','km'));meta.append(strong,node('span','','GPX track distance'));if(r.durationSeconds){const duration=node('p','',formatDuration(r.durationSeconds)+' total time');duration.style.cssText='font-size:14px;font-weight:600;margin:10px 0 0';meta.append(duration)}bottom.append(meta,downloadLink(r,'download'));root.append(bottom);const warning=safetyWarning();warning.style.margin='16px 0 0';root.append(warning)}
+function renderDetail(){const root=$('detail'),r=visible().find(r=>r.id===selected);root.replaceChildren();root.hidden=!r;if(!r)return;const close=node('button','detail-close','×');close.setAttribute('aria-label','Close route details');close.onclick=()=>{selected=null;render();fit(true)};root.append(close,node('span','eyebrow','SELECTED TREK'),node('h2','',r.name));const bottom=node('div','detail-bottom'),meta=node('div');const strong=node('strong','',r.distance.toFixed(1)+' ');strong.append(node('small','','km'));meta.append(strong,node('span','','GPX track distance'));if(r.durationSeconds){const duration=node('p','',formatDuration(r.durationSeconds)+' total time');duration.style.cssText='font-size:14px;font-weight:600;margin:10px 0 0';meta.append(duration)}
+                        bottom.append(meta, downloadLink(r, 'download'));
+root.append(bottom);
+
+if (r.page) {
+  const detailsLink = node('a', 'trek-details-link', 'View Trek Details →');
+  detailsLink.href = r.page;
+  detailsLink.style.cssText = `
+    display: block;
+    margin-top: 14px;
+    padding: 11px 16px;
+    background: #173e34;
+    color: #fff;
+    border-radius: 7px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 650;
+  `;
+  root.append(detailsLink);
+}
+const warning=safetyWarning();warning.style.margin='16px 0 0';root.append(warning)}
 function renderMap(){if(!layer)return;layer.clearLayers();const list=visible();list.forEach(r=>{const line=L.polyline(r.segments,{color:colors[bandOf(r.distance)],weight:r.id===selected?7:4,opacity:r.id===selected?1:.82}).addTo(layer);line.on('click',()=>select(r.id));line.bindTooltip(node('div','',r.name+' · '+r.distance.toFixed(1)+' km'+(r.durationSeconds?' · '+formatDuration(r.durationSeconds)+' total time':'')),{sticky:true});L.circleMarker(r.segments[0][0],{radius:r.id===selected?7:4,color:'#fff',weight:2,fillColor:colors[bandOf(r.distance)],fillOpacity:1}).addTo(layer).on('click',()=>select(r.id))});if(selected)layer.eachLayer(l=>{if(l instanceof L.Polyline&&l.options.weight===7)l.bringToFront()})}
 function render(){
  renderFilters();const list=visible(),root=$('route-list');root.replaceChildren();$('count').textContent=list.length;
