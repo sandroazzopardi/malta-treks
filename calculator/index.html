@@ -1,103 +1,86 @@
-<!doctype html><html lang="en"><head>
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Trek Finish Time Calculator | MaltaTreks</title>
-<meta name="description" content="Estimate when you will finish a long-distance trek. Enter total distance, distance completed, walking speed and hourly breaks to calculate your remaining time.">
+<title>Trek Time Calculator | Plan & Track Your Hike | MaltaTreks</title>
+<meta name="description" content="Free trek time calculator for Malta and Gozo. Plan your hike or estimate your finish time while trekking, accounting for walking speed and hourly breaks.">
 <link rel="canonical" href="https://maltatreks.com/calculator/">
-<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
-<meta name="theme-color" content="#173e34">
-<meta property="og:type" content="website"><meta property="og:site_name" content="MaltaTreks"><meta property="og:title" content="Trek Finish Time Calculator | MaltaTreks"><meta property="og:description" content="Calculate your remaining trekking time and expected finish time, including regular breaks."><meta property="og:url" content="https://maltatreks.com/calculator/">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-PLKEZJCQK2"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-PLKEZJCQK2');</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Trek Finish Time Calculator","url":"https://maltatreks.com/calculator/","applicationCategory":"SportsApplication","operatingSystem":"Any","isAccessibleForFree":true}</script>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><meta name="theme-color" content="#173e34">
+<meta property="og:type" content="website"><meta property="og:site_name" content="MaltaTreks"><meta property="og:title" content="Trek Time Calculator | MaltaTreks"><meta property="og:description" content="Plan your trek or calculate your remaining time on the trail."><meta property="og:url" content="https://maltatreks.com/calculator/">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PLKEZJCQK2"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-PLKEZJCQK2');</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Trek Time Calculator","url":"https://maltatreks.com/calculator/","applicationCategory":"SportsApplication","operatingSystem":"Any","isAccessibleForFree":true}</script>
 <style>
-    :root{--green:#173e34;--ink:#17372e;--muted:#63756c;--line:#dce6dd;--bg:#f6f8f4;--white:#fff;--soft:#edf3eb}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}a:focus-visible{outline:3px solid #92bfa7;outline-offset:4px}
-    .header{background:var(--green);color:#fff;min-height:88px;display:flex;align-items:center;gap:24px;padding:16px 28px;border-bottom:1px solid #ffffff26}.brand{display:flex;align-items:center;flex-shrink:0}.brand img{width:210px;max-height:80px;object-fit:contain}.brand-fallback{font-weight:800;letter-spacing:-.05em;font-size:28px}.tagline{font-size:11px;letter-spacing:.16em;color:#d5e4db;font-weight:700}.header nav{margin-left:auto;display:flex;gap:22px;align-items:center}.header nav a{font-size:13px;font-weight:650;text-decoration:none;white-space:nowrap}.header nav a:hover{text-decoration:underline}.header nav .active{color:#c7e8d2}
-    .wrap{width:100%;max-width:none;margin:auto;padding:0 28px}.hero{background:var(--green);color:#fff;padding:27px 0 32px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#bed4c5}.hero h1{font-size:clamp(27px,3.5vw,42px);letter-spacing:-.04em;line-height:1.15;margin:8px 0 9px;max-width:none}.hero p{max-width:none;color:#dbe8df;font-size:14px;line-height:1.5;margin:0}.hero .stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:38px}.stat{border-left:2px solid #82b399;padding-left:14px}.stat strong{display:block;color:#fff;font-size:19px}.stat span{font-size:12px;color:#d0e0d5}
-    .section{padding:55px 0 20px}.section-title{font-size:28px;line-height:1.2;letter-spacing:-.035em;margin:0 0 8px}.section-lead{color:var(--muted);margin:0 0 26px;max-width:none}.gear-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.gear-card{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}.gear-card .art{height:170px;background:linear-gradient(135deg,#e2e9df,#f0f4ee);display:flex;align-items:center;justify-content:center;position:relative}.art svg{width:112px;height:112px;stroke:#527464;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}.art .category{position:absolute;top:15px;left:17px;color:#365747;background:#fff;border:1px solid #dbe6db;border-radius:30px;padding:4px 10px;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.gear-card .content{padding:25px 26px 26px}.gear-card h3{font-size:24px;letter-spacing:-.035em;line-height:1.2;margin:0 0 7px}.sub{color:var(--muted);font-size:13px;margin:0 0 17px}.content p{margin:0 0 13px}.content p:last-child{margin-bottom:0}.fact{font-size:12px;display:inline-block;border:1px solid #d5e4d6;border-radius:20px;background:#f3f7f1;padding:4px 10px;font-weight:750;margin:0 0 16px}.verdict{margin-top:19px;padding:15px 17px;background:var(--soft);border-left:3px solid #78a88b;border-radius:4px;font-size:14px}.verdict strong{display:block;margin-bottom:3px}.small-note{font-size:13px;color:var(--muted)}.sock-panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:30px;display:grid;grid-template-columns:180px 1fr;gap:28px;align-items:start}.sock-icon{border-radius:12px;background:#edf3eb;display:grid;place-items:center;min-height:170px}.sock-icon svg{width:92px;height:92px;stroke:#527464;stroke-width:1.5;fill:none}.sock-panel h3{font-size:24px;line-height:1.25;letter-spacing:-.03em;margin:0 0 12px}.sock-panel p{margin:0 0 12px}.disclosure{margin:35px 0 65px;padding:21px 24px;background:#eaf0e9;border-radius:10px;font-size:14px;color:#4d6558}.footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.footer a{color:var(--green)}
-    @media(max-width:800px){.gear-grid{grid-template-columns:1fr}.header{padding:14px 20px;flex-wrap:wrap;gap:10px 16px}.brand img{width:155px;max-height:50px}.tagline{font-size:9px}.header nav{gap:16px}.hero{padding:23px 0 27px}.sock-panel{grid-template-columns:1fr}.sock-icon{min-height:110px}.sock-icon svg{width:70px;height:70px}}@media(max-width:480px){.header nav{width:100%;margin:0;justify-content:flex-start}.wrap{padding:0 18px}.gear-card .content{padding:22px}.hero .stats{gap:18px}.hero p{font-size:16px}}
-  
-/* Original gear photographs: add images to /assets/gear/ */
-.gear-photo{height:235px;background:#e8eee8;overflow:hidden;display:grid;place-items:center}
-.gear-photo img{width:100%;height:100%;object-fit:cover;display:block}
-.gear-photo img[hidden]{display:none}
-.photo-pending{font-size:13px;color:#64766a;letter-spacing:.02em;text-align:center;padding:22px}
-.photo-pending[hidden]{display:none}
-.summer-shoes{border-top:1px solid var(--line);margin-top:22px;padding-top:20px}
-.summer-shoes h4{font-size:18px;margin:0 0 12px}
-.sock-panel{grid-template-columns:1fr}
-
-/* Full-width editorial layout: no premature text wrapping in narrow cards */
-.gear-grid{grid-template-columns:minmax(0,1fr);gap:20px}
-.gear-card{display:grid;grid-template-columns:minmax(230px,32%) minmax(0,1fr);align-items:stretch}
-.gear-photo{height:100%;min-height:260px;align-self:stretch}
-.gear-card .content{min-width:0;padding:24px 28px}
-.gear-card .content p{max-width:none}
-/* Match the homepage's actual logo asset and sizing */
-.header .brand{display:flex;align-items:center;flex-shrink:0;padding:0;line-height:1;text-decoration:none}
-.header .brand img{display:block;width:210px;height:auto;max-height:80px;object-fit:contain}
-@media(max-width:800px){.header .brand img{width:155px;max-height:50px}}
-@media(max-width:650px){.gear-card{grid-template-columns:minmax(0,1fr)}.gear-photo{height:230px;min-height:0}.gear-card .content{padding:22px}}
-
-/* Equipment photos: preserve aspect ratio, maximum 400 × 300 px */
-.gear-card { grid-template-columns: minmax(0, 400px) minmax(0, 1fr); }
-.gear-photo { width:100%; max-width:400px; height:300px; min-height:0; align-self:start; display:grid; place-items:center; overflow:hidden; background:#e8eee8; }
-.gear-photo img { width:auto; height:auto; max-width:100%; max-height:100%; object-fit:contain; display:block; }
-@media(max-width:650px) {
-  .gear-card { grid-template-columns:minmax(0,1fr); }
-  .gear-photo { width:100%; max-width:400px; height: min(300px, 75vw); margin-inline:auto; }
-}
-
-/* Forgotten essentials: compact, unboxed list */
-.essentials-list{list-style:disc;padding-left:22px;margin:0}
-.essentials-list li{padding:3px 0;color:var(--muted);font-size:15px;line-height:1.6}
-.essentials-list strong{color:var(--ink)}
-.essentials-note{margin:16px 0 0;font-size:14px;color:var(--muted)}
-
-.calculator{max-width:920px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:30px}.calc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.field label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}.field input{width:100%;border:1px solid #cbd9cd;border-radius:8px;padding:12px 13px;font:inherit;color:var(--ink);background:white}.field input:focus{outline:2px solid #82b399;outline-offset:1px}.results{margin-top:25px;border-top:1px solid var(--line);padding-top:24px}.progress{height:10px;border-radius:20px;background:#e6eee6;overflow:hidden;margin:9px 0}.progress span{display:block;background:#528d6b;height:100%;width:0}.progress-caption{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}.result{border:1px solid var(--line);border-radius:10px;padding:16px}.result span{display:block;color:var(--muted);font-size:12px}.result strong{display:block;font-size:24px;line-height:1.35;margin-top:4px}.finish{background:var(--soft);border-left:3px solid #78a88b;border-radius:8px;padding:20px;margin-top:16px}.finish strong{display:block;font-size:32px;line-height:1.25}.present-time{font-size:20px;font-weight:750;margin:2px 0 14px;line-height:1.3}.finish span{color:var(--muted);font-size:13px}.error{color:#a53b32;font-size:13px;min-height:20px;margin:12px 0 0}.calc-note{font-size:13px;color:var(--muted);margin-top:18px}@media(max-width:650px){.calculator{padding:20px}.calc-grid,.result-grid{grid-template-columns:1fr}.finish strong{font-size:27px}}
-</style></head><body>
+:root{--green:#173e34;--ink:#17372e;--muted:#63756c;--line:#dce6dd;--bg:#f6f8f4;--soft:#edf3eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #92bfa7;outline-offset:3px}
+.header{background:var(--green);color:#fff;min-height:88px;display:flex;align-items:center;gap:24px;padding:16px 28px;border-bottom:1px solid #ffffff26}.brand{display:flex;align-items:center;flex-shrink:0;line-height:1}.brand img{display:block;width:210px;max-height:80px;object-fit:contain}.tagline{font-size:11px;letter-spacing:.16em;color:#d5e4db;font-weight:700}.header nav{margin-left:auto;display:flex;gap:22px;align-items:center}.header nav a{font-size:13px;font-weight:650;text-decoration:none;white-space:nowrap}.header nav a:hover{text-decoration:underline}.header nav .active{color:#c7e8d2}
+.wrap{width:100%;padding:0 28px}.hero{background:var(--green);color:#fff;padding:27px 0 32px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#bed4c5}.hero h1{font-size:clamp(27px,3.5vw,42px);letter-spacing:-.04em;line-height:1.15;margin:8px 0 9px}.hero p{color:#dbe8df;font-size:14px;line-height:1.5;margin:0}.section{padding:42px 0 65px}.calculator{max-width:920px;margin:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:30px}.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#edf3eb;border-radius:10px;padding:6px;margin-bottom:22px}.modes button{border:0;background:transparent;color:var(--ink);font:700 15px system-ui;cursor:pointer;padding:14px 8px;border-radius:8px}.modes button[aria-selected=true]{background:var(--green);color:#fff;box-shadow:0 2px 7px #0002}.mode-desc{color:var(--muted);font-size:14px;margin:0 0 24px}.calc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.field label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}.field input{width:100%;border:1px solid #cbd9cd;border-radius:8px;padding:12px 13px;font:inherit;color:var(--ink);background:#fff}.hint{display:block;font-size:12px;color:var(--muted);margin-top:5px}.results{margin-top:28px;border-top:1px solid var(--line);padding-top:23px}.progress{height:10px;border-radius:20px;background:#e6eee6;overflow:hidden;margin:9px 0}.progress span{display:block;background:#528d6b;height:100%;width:0}.progress-caption{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:13px}.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}.result{border:1px solid var(--line);border-radius:10px;padding:16px}.result span{display:block;color:var(--muted);font-size:12px}.result strong{display:block;font-size:24px;line-height:1.35;margin-top:4px}.finish{background:var(--soft);border-left:3px solid #78a88b;border-radius:8px;padding:20px;margin-top:16px}.finish strong{display:block;font-size:32px;line-height:1.25}.finish .start-clock{font-size:20px;margin-bottom:14px}.finish span{display:block;color:var(--muted);font-size:13px}.error{color:#a53b32;font-size:13px;min-height:20px;margin:12px 0 0}.calc-note{font-size:13px;color:var(--muted);margin-top:18px}.footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.footer a{color:var(--green)}[hidden]{display:none!important}
+@media(max-width:800px){.header{padding:14px 20px;flex-wrap:wrap;gap:10px 16px}.brand img{width:155px;max-height:50px}.tagline{font-size:9px}.header nav{gap:16px}.hero{padding:23px 0 27px}}@media(max-width:650px){.calculator{padding:20px}.calc-grid,.result-grid{grid-template-columns:1fr}.finish strong{font-size:27px}}@media(max-width:480px){.header nav{width:100%;margin:0;justify-content:flex-start;flex-wrap:wrap}.wrap{padding:0 18px}.hero p{font-size:16px}}
+</style>
+</head>
+<body>
 <header class="header"><a aria-label="MaltaTreks home" class="brand" href="../"><img alt="MaltaTreks" src="../assets/maltatreks-logo.png"></a><span class="tagline">GO FURTHER · EXPLORE MORE</span><nav aria-label="Main navigation"><a href="../">Explore treks</a><a href="../gear/">My Gear</a><a aria-current="page" class="active" href="./">Calculator</a></nav></header>
-<main><section class="hero"><div class="wrap"><div class="eyebrow">MALTATREKS / TREK PLANNING</div><h1>Trek Finish Time Calculator</h1><p>Already on the trail? Estimate how much longer your trek will take, including regular breaks, and when you can expect to finish.</p></div></section>
+<main><section class="hero"><div class="wrap"><div class="eyebrow">MALTATREKS / TREK PLANNING</div><h1>Trek Time Calculator</h1><p>Plan your next long-distance trek or estimate your remaining time while on the trail.</p></div></section>
 <section class="section"><div class="wrap"><div class="calculator">
-<h2 class="section-title">Plan the kilometres ahead</h2><p class="section-lead">Adjust the figures below to calculate your estimated finish time.</p>
-<div class="calc-grid">
-<div class="field"><label for="distance">Total trek distance (km)</label><input id="distance" type="number" min="0.1" step="any" value="70" inputmode="decimal"></div>
-<div class="field"><label for="completed">Distance already completed (km)</label><input id="completed" type="number" min="0" step="any" value="25" inputmode="decimal"></div>
-<div class="field"><label for="speed">Average moving speed (km/h)</label><input id="speed" type="number" min="0.1" step="any" value="4.5" inputmode="decimal"></div>
-<div class="field"><label for="breaks">Break minutes per walking hour</label><input id="breaks" type="number" min="0" max="59" step="1" value="10" inputmode="numeric"></div>
-<div class="field"><label for="currentTime">Current local time</label><input id="currentTime" type="time"></div>
+<div class="modes" role="tablist" aria-label="Calculator mode"><button id="planTab" type="button" role="tab" aria-selected="true" aria-controls="calculatorFields">Plan a Trek</button><button id="trailTab" type="button" role="tab" aria-selected="false" aria-controls="calculatorFields">Already Trekking</button></div>
+<p class="mode-desc" id="modeDesc">Enter your expected distance, walking speed, breaks and planned starting time.</p>
+<div id="calculatorFields" class="calc-grid">
+<div class="field"><label for="distance">Total trek distance (km)</label><input id="distance" type="number" min="0" max="10000" step="0.1" value="70" inputmode="decimal"></div>
+<div class="field" id="completedField" hidden><label for="completed">Distance completed (km)</label><input id="completed" type="number" min="0" step="0.1" value="25" inputmode="decimal"></div>
+<div class="field"><label for="speed">Average walking speed (km/h)</label><input id="speed" type="number" min="0.1" max="30" step="0.1" value="4.5" inputmode="decimal"><span class="hint">Moving speed, excluding breaks</span></div>
+<div class="field"><label for="breaks">Break per walking hour (minutes)</label><input id="breaks" type="number" min="0" max="240" step="1" value="10" inputmode="numeric"><span class="hint">One break after each full hour of walking, except at the finish</span></div>
+<div class="field"><label for="startTime" id="timeLabel">Planned starting time</label><input id="startTime" type="time" value="06:00"><span class="hint" id="timeHint">Local time at your planned starting location</span></div>
 </div>
-<p id="error" class="error" role="status" aria-live="polite"></p>
-<div class="results" id="results"><div class="progress-caption"><span>Trek progress</span><strong id="percent">0%</strong></div><div class="progress" role="progressbar" aria-label="Trek completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><span id="progressBar"></span></div><div class="progress-caption"><span id="doneLabel">0 km completed</span><span id="remainingLabel">0 km remaining</span></div>
-<div class="result-grid"><div class="result"><span>Walking time remaining</span><strong id="walking">—</strong></div><div class="result"><span>Planned breaks remaining</span><strong id="rest">—</strong></div><div class="result"><span>Total time remaining</span><strong id="duration">—</strong></div><div class="result"><span>Distance remaining</span><strong id="remaining">—</strong></div></div>
-<div class="finish"><span>Present time (used for calculation)</span><div class="present-time" id="presentTime">—</div><span>Estimated finish time</span><strong id="finish">—</strong><span id="finishDate"></span></div></div>
-<p class="calc-note">Breaks are added after each full hour of remaining walking, except when the trek finishes exactly at that hour. The estimate assumes a constant moving speed and does not account for terrain, fatigue, navigation delays or unexpected stops. Times are based on your device's local clock.</p>
-</div></div></section></main>
+<p class="error" id="error" role="alert" aria-live="polite"></p>
+<div class="results" id="results" aria-live="polite">
+<div id="progressArea" hidden><strong>Trek progress</strong><div class="progress"><span id="progressBar"></span></div><div class="progress-caption"><span id="progressText"></span><span id="remainingText"></span></div></div>
+<div class="result-grid"><div class="result"><span id="distanceResultLabel">Total distance</span><strong id="distanceResult">—</strong></div><div class="result"><span>Walking time</span><strong id="walkingResult">—</strong></div><div class="result"><span>Planned break time</span><strong id="breakResult">—</strong></div><div class="result"><span id="durationLabel">Total estimated duration</span><strong id="durationResult">—</strong></div></div>
+<div class="finish"><span id="startResultLabel">Planned starting time</span><strong class="start-clock" id="startResult">—</strong><span>Estimated finish time</span><strong id="finishResult">—</strong></div>
+<p class="calc-note">Estimates assume a constant moving speed. Actual terrain, fatigue, weather, navigation and unplanned stops may extend the trek. Breaks are added after each complete hour of walking, not after the final hour.</p>
+</div></div></div></section></main>
 <footer class="footer"><div class="wrap footer-inner"><span>© <span id="year"></span> MaltaTreks · Go further. Explore more.</span><span><a href="../">Back to trekking routes</a> · <a href="https://sandroazzopardi.com/" rel="noopener noreferrer">Sandro Azzopardi</a></span></div></footer>
 <script>
-const ids=['distance','completed','speed','breaks','currentTime'];
+(()=>{
+'use strict';
 const $=id=>document.getElementById(id);
-const now=new Date();$('currentTime').value=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-$('year').textContent=now.getFullYear();
-function fmt(minutes){const m=Math.round(minutes);return Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m';}
-function calculate(){
- const total=Number($('distance').value),done=Number($('completed').value),speed=Number($('speed').value),breakMin=Number($('breaks').value);
- const time=$('currentTime').value;
- const valid=ids.every(id=>$(id).value.trim()!=='')&&Number.isFinite(total)&&total>0&&Number.isFinite(done)&&done>=0&&done<=total&&Number.isFinite(speed)&&speed>0&&Number.isInteger(breakMin)&&breakMin>=0&&breakMin<=59&&/^\d{2}:\d{2}$/.test(time);
- $('error').textContent=valid?'':'Enter valid values: distance greater than zero, completed distance between 0 and total, positive speed, and 0–59 whole break minutes.';
- $('results').hidden=!valid;if(!valid)return;
- const left=total-done,walkMinutes=left/speed*60;
- const numberOfBreaks=Math.max(0,Math.ceil(walkMinutes/60-1e-10)-1);
- const restMinutes=numberOfBreaks*breakMin;
- const totalMinutes=walkMinutes+restMinutes;
- const progress=Math.round(done/total*100);
- $('percent').textContent=progress+'%';$('progressBar').style.width=done/total*100+'%';$('progress').setAttribute('aria-valuenow',progress);
- $('doneLabel').textContent=done+' km completed';$('remainingLabel').textContent=Number(left.toFixed(2))+' km remaining';
- $('walking').textContent=fmt(walkMinutes);$('rest').textContent=fmt(restMinutes);$('duration').textContent=fmt(totalMinutes);$('remaining').textContent=Number(left.toFixed(2))+' km';
- const [h,m]=time.split(':').map(Number);const end=new Date();end.setHours(h,m,0,0);const startDay=end.getDate();end.setMinutes(end.getMinutes()+Math.round(totalMinutes));
- $('presentTime').textContent=time;
- $('finish').textContent=end.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit',hour12:false});
- $('finishDate').textContent=end.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(end.getDate()!==startDay?' · later than today':'');
+let mode='plan';let timeManuallyEdited=false;
+const nowTime=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+const formatMinutes=n=>{const rounded=Math.round(n);return Math.floor(rounded/60)+'h '+String(rounded%60).padStart(2,'0')+'m'};
+const formatClock=n=>{const rounded=Math.round(n);const mins=((rounded%1440)+1440)%1440;return String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0')};
+const number=id=>{const value=$(id).value.trim();return value===''?NaN:Number(value)};
+function update(){
+ const distance=number('distance'),completed=number('completed'),speed=number('speed'),breaks=number('breaks'),time=$('startTime').value;
+ let error='';
+ if(!Number.isFinite(distance)||distance<=0||distance>10000)error='Enter a valid total distance greater than 0 km.';
+ else if(mode==='trail'&&(!Number.isFinite(completed)||completed<0||completed>distance))error='Distance completed must be between 0 and the total distance.';
+ else if(!Number.isFinite(speed)||speed<=0||speed>30)error='Enter a valid walking speed greater than 0 and no more than 30 km/h.';
+ else if(!Number.isFinite(breaks)||breaks<0||breaks>240)error='Enter a break duration between 0 and 240 minutes.';
+ else if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))error='Enter a valid time.';
+ $('error').textContent=error;$('results').hidden=!!error;if(error)return;
+ const remaining=mode==='trail'?distance-completed:distance;
+ const walkingMinutes=remaining/speed*60;
+ const fullHoursBeforeFinish=Math.max(0,Math.ceil(walkingMinutes/60-1e-10)-1);
+ const breakMinutes=fullHoursBeforeFinish*breaks;
+ const totalMinutes=walkingMinutes+breakMinutes;
+ const [hour,minute]=time.split(':').map(Number);
+ const finishMinutes=hour*60+minute+Math.round(totalMinutes);
+ const days=Math.floor(finishMinutes/1440);
+ $('distanceResult').textContent=remaining.toFixed(1)+' km';
+ $('walkingResult').textContent=formatMinutes(walkingMinutes);
+ $('breakResult').textContent=formatMinutes(breakMinutes);
+ $('durationResult').textContent=formatMinutes(totalMinutes);
+ $('startResult').textContent=time;
+ $('finishResult').textContent=formatClock(finishMinutes)+(days?' (+'+days+' day'+(days===1?'':'s')+')':'');
+ $('progressBar').style.width=(mode==='trail'?Math.min(100,completed/distance*100):0)+'%';
+ $('progressText').textContent=completed.toFixed(1)+' km completed';
+ $('remainingText').textContent=remaining.toFixed(1)+' km remaining';
 }
-ids.forEach(id=>$(id).addEventListener('input',calculate));calculate();
-</script></body></html>
+function setMode(next){mode=next;const trail=mode==='trail';$('planTab').setAttribute('aria-selected',String(!trail));$('trailTab').setAttribute('aria-selected',String(trail));$('completedField').hidden=!trail;$('progressArea').hidden=!trail;$('modeDesc').textContent=trail?'Enter your progress and current walking speed to estimate when you will finish.':'Enter your expected distance, walking speed, breaks and planned starting time.';$('timeLabel').textContent=trail?'Present time (editable)':'Planned starting time';$('timeHint').textContent=trail?'Set automatically from your device clock; edit if necessary.':'Local time at your planned starting location';$('startResultLabel').textContent=trail?'Present time':'Planned starting time';$('distanceResultLabel').textContent=trail?'Remaining distance':'Total distance';$('durationLabel').textContent=trail?'Estimated remaining duration':'Total estimated duration';if(trail){$('startTime').value=nowTime();timeManuallyEdited=false}else{$('startTime').value='06:00'}update()}
+$('planTab').addEventListener('click',()=>setMode('plan'));
+$('trailTab').addEventListener('click',()=>setMode('trail'));
+for(const id of ['distance','completed','speed','breaks'])$(id).addEventListener('input',update);
+$('startTime').addEventListener('input',()=>{timeManuallyEdited=true;update()});
+setInterval(()=>{if(mode==='trail'&&!timeManuallyEdited){const current=nowTime();if($('startTime').value!==current){$('startTime').value=current;update()}}},15000);
+$('year').textContent=new Date().getFullYear();setMode('plan');
+})();
+</script>
+</body></html>
