@@ -47,7 +47,18 @@ async function load(){
     if(!res.ok)throw new Error((item?.name||item?.file||'Route')+' (file unavailable)');
     const raw=await res.text();if(raw.length>20_000_000)throw new Error((item?.name||item?.file)+' (file too large)');
     const parsed=parseGPX(raw,item.file.split('/').pop());
-    routes.push({...parsed,id:String(index),file:item.file,url,name:typeof item.name==='string'&&item.name.trim()?item.name.trim().slice(0,150):parsed.name});
+    routes.push({
+  ...parsed,
+  id: String(index),
+  file: item.file,
+  url,
+  name: typeof item.name === 'string' && item.name.trim()
+    ? item.name.trim().slice(0, 150)
+    : parsed.name,
+  page: typeof item.page === 'string' && /^\/treks\/[a-z0-9-]+\/$/.test(item.page)
+    ? item.page
+    : null
+});
     routes.sort((a,b)=>Number(a.id)-Number(b.id));
    }catch(e){warnings.push(e instanceof Error?e.message:'Invalid GPX file')}
    finally{completed++;render();if(!selected)fit(true)}
