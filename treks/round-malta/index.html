@@ -43,6 +43,10 @@
     }
     #map .leaflet-tile { box-sizing:content-box !important; }
     #map .leaflet-container { overflow:hidden; }
+    .elevation-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:20px 0}
+    .elevation-inner{padding:0 16px 14px}
+    #elevation-chart{display:block;width:100%;height:250px}
+    .elevation-note{font-size:12px;color:var(--muted);margin:0 0 4px}
     @media(max-width:600px){.header-inner{padding:13px 16px;justify-content:center}.brand img{width:155px}.nav{justify-content:center}.nav a{font-size:12px;padding:6px 8px}.wrap{padding:24px 16px 40px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}#map{height:350px}.section{padding:18px}}
   </style>
 </head>
@@ -63,6 +67,10 @@
     </div>
     <div class="actions"><a class="button" href="/gpx/Trekking-RoundMalta-sandroazzopardi.gpx" download>Download GPX Track</a><a class="button secondary" href="#route-map">View Route Map</a></div>
     <section class="map-card" id="route-map" aria-labelledby="map-title"><div class="map-head"><h2 id="map-title">Interactive Route Map</h2><span style="font-size:12px;color:var(--muted)">Recorded GPX track</span></div><div id="map" role="region" aria-label="Round Malta route map"></div><p class="map-status" id="map-status" role="status">Loading route from GPX…</p></section>
+    <section class="elevation-card" aria-labelledby="elevation-title">
+      <div class="map-head"><h2 id="elevation-title">Elevation Profile</h2><span id="elevation-range" style="font-size:12px;color:var(--muted)">Reading GPX elevations…</span></div>
+      <div class="elevation-inner"><canvas id="elevation-chart" role="img" aria-label="Elevation in metres plotted against distance in kilometres"></canvas><p class="elevation-note" id="elevation-note">Elevation is taken from the recorded GPS track and may contain measurement errors.</p></div>
+    </section>
     <section class="section"><h2>About this trek</h2><p class="placeholder">Add your own account of the Round Malta challenge here: why you chose this route, how you prepared and what the experience was like.</p></section>
     <section class="section"><h2>What the GPX doesn't tell you</h2><p class="placeholder">Add notes about the most difficult stretches, exposed coastal sections, scrambling, access considerations, navigation and places where extra care is required.</p></section>
     <section class="section"><h2>Preparation and practical advice</h2><p class="placeholder">Add your experience with pacing, water, food, equipment, breaks and night trekking.</p></section>
@@ -72,6 +80,49 @@
   <footer class="footer">Malta beyond the ordinary. <a href="/">All Treks</a> <a href="https://sandroazzopardi.com/" target="_blank" rel="noopener noreferrer">Created by Sandro Azzopardi</a></footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
+    function drawElevationProfile(points){
+      const canvas=document.getElementById('elevation-chart');
+      const info=document.getElementById('elevation-range');
+      const note=document.getElementById('elevation-note');
+      if(points.length<2){canvas.style.display='none';info.textContent='No elevation data available';note.textContent='This GPX does not contain enough usable elevation readings.';return;}
+      const values=points.map(p=>p[1]);
+      const min=Math.min(...values.filter(Number.isFinite)),max=Math.max(...values.filter(Number.isFinite));
+      info.textContent=`Lowest ${min.toFixed(0)} m · Highest ${max.toFixed(0)} m`;
+      // Bucket by distance and use the median to reduce GPS elevation spikes.
+      const bucketCount=Math.min(900,Math.max(150,Math.round(canvas.clientWidth)));
+      const maxDist=points[points.length-1][0];
+      const buckets=Array.from({length:bucketCount},()=>[]);
+      for(const [km,ele] of points){const i=Math.min(bucketCount-1,Math.floor(km/Math.max(maxDist,0.001)*bucketCount));buckets[i].push(ele);}
+      const profile=buckets.map((b,i)=>{if(!b.length)return null;b.sort((a,b)=>a-b);return [i/(bucketCount-1)*maxDist,b[Math.floor(b.length/2)]];}).filter(Boolean);
+      function paint(){
+        const w=canvas.clientWidth,h=250,dpr=Math.min(window.devicePixelRatio||1,2);
+        if(w<50)return;
+        canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+        const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+        const m={l:48,r:14,t:16,b:38},pw=w-m.l-m.r,ph=h-m.t-m.b;
+        const lo=Math.floor((Math.min(...profile.map(p=>p[1]))-10)/25)*25;
+        const hi=Math.ceil((Math.max(...profile.map(p=>p[1]))+10)/25)*25;
+        const y=e=>m.t+ph-(e-lo)/(hi-lo||1)*ph;
+        const x=km=>m.l+km/Math.max(maxDist,.001)*pw;
+        ctx.font='12px system-ui, sans-serif';ctx.lineWidth=1;ctx.textBaseline='middle';
+        for(let i=0;i<=4;i++){
+          const elev=lo+(hi-lo)*i/4,py=y(elev);
+          ctx.strokeStyle='#e3eae4';ctx.beginPath();ctx.moveTo(m.l,py);ctx.lineTo(w-m.r,py);ctx.stroke();
+          ctx.fillStyle='#65746c';ctx.textAlign='right';ctx.fillText(Math.round(elev)+' m',m.l-8,py);
+        }
+        const step=maxDist>100?25:maxDist>50?10:5;
+        ctx.textAlign='center';ctx.textBaseline='top';ctx.fillStyle='#65746c';
+        for(let km=0;km<=maxDist;km+=step)ctx.fillText(km+' km',x(km),h-m.b+10);
+        ctx.beginPath();profile.forEach(([km,e],i)=>i?ctx.lineTo(x(km),y(e)):ctx.moveTo(x(km),y(e)));
+        ctx.lineTo(x(profile.at(-1)[0]),m.t+ph);ctx.lineTo(x(profile[0][0]),m.t+ph);ctx.closePath();
+        ctx.fillStyle='rgba(39,102,78,.14)';ctx.fill();
+        ctx.beginPath();profile.forEach(([km,e],i)=>i?ctx.lineTo(x(km),y(e)):ctx.moveTo(x(km),y(e)));
+        ctx.strokeStyle='#27664e';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+      }
+      paint();
+      if(window.ResizeObserver)new ResizeObserver(paint).observe(canvas);
+      else window.addEventListener('resize',paint);
+    }
     (async function(){
       const status=document.getElementById('map-status');
       try{
@@ -90,6 +141,28 @@
         const tracks=Array.from(xml.getElementsByTagNameNS('*','trkseg'));
         const segments=tracks.map(seg=>Array.from(seg.getElementsByTagNameNS('*','trkpt')).map(p=>[Number(p.getAttribute('lat')),Number(p.getAttribute('lon'))]).filter(p=>p.every(Number.isFinite))).filter(seg=>seg.length>1);
         if(!segments.length)throw new Error('No usable track points were found.');
+        // Read recorded elevations from the same GPX points, in track order.
+        const chartPoints=[];
+        let cumulativeKm=0,previous=null;
+        const radians=n=>n*Math.PI/180;
+        for(const seg of tracks){
+          const pts=Array.from(seg.getElementsByTagNameNS('*','trkpt'));
+          previous=null; // Do not add an artificial distance across track segment breaks.
+          for(const pt of pts){
+            const lat=Number(pt.getAttribute('lat')),lon=Number(pt.getAttribute('lon'));
+            if(!Number.isFinite(lat)||!Number.isFinite(lon))continue;
+            if(previous){
+              const dLat=radians(lat-previous[0]),dLon=radians(lon-previous[1]);
+              const a=Math.sin(dLat/2)**2+Math.cos(radians(previous[0]))*Math.cos(radians(lat))*Math.sin(dLon/2)**2;
+              cumulativeKm+=6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(Math.max(0,1-a)));
+            }
+            previous=[lat,lon];
+            const eleNode=pt.getElementsByTagNameNS('*','ele')[0];
+            const elevation=eleNode&&eleNode.textContent.trim()!==''?Number(eleNode.textContent):NaN;
+            if(Number.isFinite(elevation))chartPoints.push([cumulativeKm,elevation]);
+          }
+        }
+        drawElevationProfile(chartPoints);
         const route=L.polyline(segments,{color:'#27664e',weight:4,opacity:.9}).addTo(map);
         const bounds=route.getBounds();
         map.fitBounds(bounds,{padding:[24,24]});
