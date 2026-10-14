@@ -46,6 +46,10 @@
     .elevation-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:20px 0}
     .elevation-inner{padding:0 16px 14px}
     #elevation-chart{display:block;width:100%;height:250px}
+    .elevation-totals{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 10px}
+    .elevation-total{flex:1 1 160px;border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:#f7faf7}
+    .elevation-total span{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+    .elevation-total strong{font-size:22px;color:var(--green)}
     .elevation-note{font-size:12px;color:var(--muted);margin:0 0 4px}
     @media(max-width:600px){.header-inner{padding:13px 16px;justify-content:center}.brand img{width:155px}.nav{justify-content:center}.nav a{font-size:12px;padding:6px 8px}.wrap{padding:24px 16px 40px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}#map{height:350px}.section{padding:18px}}
   </style>
@@ -69,7 +73,7 @@
     <section class="map-card" id="route-map" aria-labelledby="map-title"><div class="map-head"><h2 id="map-title">Interactive Route Map</h2><span style="font-size:12px;color:var(--muted)">Recorded GPX track</span></div><div id="map" role="region" aria-label="Round Malta route map"></div><p class="map-status" id="map-status" role="status">Loading route from GPX…</p></section>
     <section class="elevation-card" aria-labelledby="elevation-title">
       <div class="map-head"><h2 id="elevation-title">Elevation Profile</h2><span id="elevation-range" style="font-size:12px;color:var(--muted)">Reading GPX elevations…</span></div>
-      <div class="elevation-inner"><canvas id="elevation-chart" role="img" aria-label="Elevation in metres plotted against distance in kilometres"></canvas><p class="elevation-note" id="elevation-note">Elevation is taken from the recorded GPS track and may contain measurement errors.</p></div>
+      <div class="elevation-inner"><canvas id="elevation-chart" role="img" aria-label="Elevation in metres plotted against distance in kilometres"></canvas><div class="elevation-totals" aria-live="polite"><div class="elevation-total"><span>Total elevation gain</span><strong id="elevation-gain">Calculating…</strong></div><div class="elevation-total"><span>Total elevation loss</span><strong id="elevation-loss">Calculating…</strong></div></div><p class="elevation-note" id="elevation-note">Elevation is taken from the recorded GPS track and may contain measurement errors.</p></div>
     </section>
     <section class="section"><h2>About this trek</h2><p class="placeholder">Add your own account of the Round Malta challenge here: why you chose this route, how you prepared and what the experience was like.</p></section>
     <section class="section"><h2>What the GPX doesn't tell you</h2><p class="placeholder">Add notes about the most difficult stretches, exposed coastal sections, scrambling, access considerations, navigation and places where extra care is required.</p></section>
@@ -84,7 +88,7 @@
       const canvas=document.getElementById('elevation-chart');
       const info=document.getElementById('elevation-range');
       const note=document.getElementById('elevation-note');
-      if(points.length<2){canvas.style.display='none';info.textContent='No elevation data available';note.textContent='This GPX does not contain enough usable elevation readings.';return;}
+      if(points.length<2){canvas.style.display='none';info.textContent='No elevation data available';note.textContent='This GPX does not contain enough usable elevation readings.';document.getElementById('elevation-gain').textContent='N/A';document.getElementById('elevation-loss').textContent='N/A';return;}
       const values=points.map(p=>p[1]);
       const min=Math.min(...values.filter(Number.isFinite)),max=Math.max(...values.filter(Number.isFinite));
       info.textContent=`Lowest ${min.toFixed(0)} m · Highest ${max.toFixed(0)} m`;
@@ -94,6 +98,20 @@
       const buckets=Array.from({length:bucketCount},()=>[]);
       for(const [km,ele] of points){const i=Math.min(bucketCount-1,Math.floor(km/Math.max(maxDist,0.001)*bucketCount));buckets[i].push(ele);}
       const profile=buckets.map((b,i)=>{if(!b.length)return null;b.sort((a,b)=>a-b);return [i/(bucketCount-1)*maxDist,b[Math.floor(b.length/2)]];}).filter(Boolean);
+      // Calculate cumulative ascent and descent on a distance-binned, median-filtered
+      // profile. A 3 m threshold suppresses small fluctuations in GPS altitude.
+      let ascent=0,descent=0;
+      const threshold=3;
+      if(profile.length){
+        let anchor=profile[0][1];
+        for(let i=1;i<profile.length;i++){
+          const elevation=profile[i][1],delta=elevation-anchor;
+          if(delta>=threshold){ascent+=delta;anchor=elevation;}
+          else if(delta<=-threshold){descent-=delta;anchor=elevation;}
+        }
+      }
+      document.getElementById('elevation-gain').textContent=Math.round(ascent).toLocaleString()+' m';
+      document.getElementById('elevation-loss').textContent=Math.round(descent).toLocaleString()+' m';
       function paint(){
         const w=canvas.clientWidth,h=250,dpr=Math.min(window.devicePixelRatio||1,2);
         if(w<50)return;
