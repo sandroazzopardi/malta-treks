@@ -217,7 +217,7 @@
         let hasTimes=false;
         const isNight=t=>t>=sunsetMs&&t<sunriseMs;
         function addTimedLine(a,night){
-          if(a.length>1)L.polyline(a,{color:night?'#4455b8':'#27664e',weight:4,opacity:.92}).addTo(night?nightLayer:dayLayer);
+          if(a.length>1)L.polyline(a,{color:night?'#4455b8':'#f4c430',weight:4,opacity:.92}).addTo(night?nightLayer:dayLayer);
         }
         for(const seg of tracks){
           const recorded=[];
