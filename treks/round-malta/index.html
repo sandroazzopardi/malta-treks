@@ -247,7 +247,7 @@
         }
         if(!hasTimes){
           // Fallback: keep the route visible even if timestamps are unavailable.
-          L.polyline(segments,{color:'#27664e',weight:4,opacity:.9}).addTo(dayLayer);
+          L.polyline(segments,{color:'#f4c430',weight:4,opacity:.9}).addTo(dayLayer);
           status.textContent='GPX timestamps unavailable; day/night markers cannot be placed.';
         }else{
           for(const e of events){
