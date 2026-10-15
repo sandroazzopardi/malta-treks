@@ -272,7 +272,7 @@
         const first=segments[0][0],last=segments[segments.length-1].at(-1);
         L.circleMarker(first,{radius:7,color:'#fff',weight:2,fillColor:'#1c7d56',fillOpacity:1}).addTo(map).bindPopup('Start');
         L.circleMarker(last,{radius:7,color:'#fff',weight:2,fillColor:'#ad5e25',fillOpacity:1}).addTo(map).bindPopup('Finish');
-        if(hasTimes)status.textContent='Track loaded · '+segments.reduce((n,s)=>n+s.length,0).toLocaleString()+' GPS points. Day/night positions assume an 08:00 start on 2 May 2025. Scroll zoom is disabled; use the map controls to zoom.';
+        if(hasTimes)status.textContent='Track loaded · '+segments.reduce((n,s)=>n+s.length,0).toLocaleString()+' GPS points. Day/night positions are according to the start time of 08:00 on 2 May 2025. Scroll zoom is disabled; use the map controls to zoom.';
       }catch(e){status.textContent='Map unavailable: '+e.message+' The GPX download above is still available.';}
     })();
   </script>
