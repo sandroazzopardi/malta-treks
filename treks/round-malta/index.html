@@ -55,6 +55,11 @@
     }
     #map .leaflet-tile { box-sizing:content-box !important; }
     #map .leaflet-container { overflow:hidden; }
+    .daynight-legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:10px 20px 14px;font-size:13px;color:var(--muted)}
+    .daynight-key{display:inline-flex;align-items:center;gap:6px}
+    .daynight-line{width:23px;height:4px;border-radius:2px;background:#27664e}
+    .daynight-line.night{background:#4455b8}
+    .solar-marker{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border:2px solid #fff;border-radius:50%;background:#fff4c7;font-size:19px;box-shadow:0 1px 7px #0005}
     .elevation-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:20px 0}
     .elevation-inner{padding:0 16px 14px}
     #elevation-chart{display:block;width:100%;height:250px}
@@ -82,7 +87,7 @@
       <div class="stat"><strong>2–3 May 2025</strong><span>Recorded dates</span></div>
     </div>
     <div class="actions"><a class="button" href="/gpx/Trekking-RoundMalta-sandroazzopardi.gpx" download>Download GPX Track</a><a class="button secondary" href="#route-map">View Route Map</a></div>
-    <section class="map-card" id="route-map" aria-labelledby="map-title"><div class="map-head"><h2 id="map-title">Interactive Route Map</h2><span style="font-size:12px;color:var(--muted)">Recorded GPX track</span></div><div id="map" role="region" aria-label="Round Malta route map"></div><p class="map-status" id="map-status" role="status">Loading route from GPX…</p></section>
+    <section class="map-card" id="route-map" aria-labelledby="map-title"><div class="map-head"><h2 id="map-title">Interactive Route Map</h2><span style="font-size:12px;color:var(--muted)">Recorded GPX track</span></div><div id="map" role="region" aria-label="Round Malta route map"></div><p class="map-status" id="map-status" role="status">Loading route from GPX…</p><div class="daynight-legend"><span class="daynight-key"><span class="daynight-line"></span>Daylight</span><span class="daynight-key"><span class="daynight-line night"></span>Night</span><span>☀️ Sunrise / 🌇 Sunset markers · Malta local time</span></div></section>
     <section class="elevation-card" aria-labelledby="elevation-title">
       <div class="map-head"><h2 id="elevation-title">Elevation Profile</h2><span id="elevation-range" style="font-size:12px;color:var(--muted)">Reading GPX elevations…</span></div>
       <div class="elevation-inner"><canvas id="elevation-chart" role="img" aria-label="Elevation in metres plotted against distance in kilometres"></canvas><div class="elevation-totals" aria-live="polite"><div class="elevation-total"><span>Total elevation gain</span><strong id="elevation-gain">Calculating…</strong></div><div class="elevation-total"><span>Total elevation loss</span><strong id="elevation-loss">Calculating…</strong></div></div><p class="elevation-note" id="elevation-note">Elevation is taken from the recorded GPS track and may contain measurement errors.</p></div>
@@ -193,8 +198,67 @@
           }
         }
         drawElevationProfile(chartPoints);
-        const route=L.polyline(segments,{color:'#27664e',weight:4,opacity:.9}).addTo(map);
-        const bounds=route.getBounds();
+        // Day/night positions are based on GPX timestamps, shifted so the
+        // first recorded point corresponds to 08:00 Malta time on 2 May 2025.
+        // May is UTC+2 in Malta; all Date calculations below use UTC instants.
+        const firstRecordedTimeNode=tracks.flatMap(seg=>Array.from(seg.getElementsByTagNameNS('*','trkpt')))
+          .map(pt=>pt.getElementsByTagNameNS('*','time')[0]?.textContent?.trim())
+          .find(t=>t&&!Number.isNaN(Date.parse(t)));
+        const firstRecordedMs=Date.parse(firstRecordedTimeNode||'');
+        const assumedStartMs=Date.parse('2025-05-02T06:00:00Z'); // 08:00 Malta
+        const shiftMs=Number.isFinite(firstRecordedMs)?assumedStartMs-firstRecordedMs:0;
+        const sunsetMs=Date.parse('2025-05-02T17:49:00Z'); // 19:49 Malta
+        const sunriseMs=Date.parse('2025-05-03T04:07:00Z'); // 06:07 Malta
+        const dayLayer=L.featureGroup().addTo(map);
+        const nightLayer=L.featureGroup().addTo(map);
+        const events=[{time:sunsetMs,label:'Sunset',clock:'2 May 2025, 19:49',symbol:'🌇'},
+                      {time:sunriseMs,label:'Sunrise',clock:'3 May 2025, 06:07',symbol:'☀️'}];
+        const eventPositions=new Map();
+        let hasTimes=false;
+        const isNight=t=>t>=sunsetMs&&t<sunriseMs;
+        function addTimedLine(a,night){
+          if(a.length>1)L.polyline(a,{color:night?'#4455b8':'#27664e',weight:4,opacity:.92}).addTo(night?nightLayer:dayLayer);
+        }
+        for(const seg of tracks){
+          const recorded=[];
+          for(const pt of Array.from(seg.getElementsByTagNameNS('*','trkpt'))){
+            const lat=Number(pt.getAttribute('lat')),lon=Number(pt.getAttribute('lon'));
+            const raw=pt.getElementsByTagNameNS('*','time')[0]?.textContent?.trim();
+            const t=Date.parse(raw||'');
+            if(Number.isFinite(lat)&&Number.isFinite(lon)&&Number.isFinite(t))recorded.push({pos:[lat,lon],t:t+shiftMs});
+          }
+          if(recorded.length<2)continue;
+          hasTimes=true;
+          let current=[recorded[0].pos],currentNight=isNight(recorded[0].t);
+          for(let i=1;i<recorded.length;i++){
+            const a=recorded[i-1],b=recorded[i];
+            // Split precisely at sunrise/sunset, including segments crossing a boundary.
+            const boundaries=events.filter(e=>a.t<e.time&&e.time<=b.t).sort((x,y)=>x.time-y.time);
+            for(const e of boundaries){
+              const f=(e.time-a.t)/(b.t-a.t);
+              const pos=[a.pos[0]+f*(b.pos[0]-a.pos[0]),a.pos[1]+f*(b.pos[1]-a.pos[1])];
+              eventPositions.set(e.label,pos);
+              current.push(pos);addTimedLine(current,currentNight);
+              current=[pos];currentNight=isNight(e.time);
+            }
+            current.push(b.pos);
+          }
+          addTimedLine(current,currentNight);
+        }
+        if(!hasTimes){
+          // Fallback: keep the route visible even if timestamps are unavailable.
+          L.polyline(segments,{color:'#27664e',weight:4,opacity:.9}).addTo(dayLayer);
+          status.textContent='GPX timestamps unavailable; day/night markers cannot be placed.';
+        }else{
+          for(const e of events){
+            const pos=eventPositions.get(e.label);
+            if(!pos)continue;
+            const markerIcon=L.divIcon({className:'',html:'<div class="solar-marker">'+e.symbol+'</div>',iconSize:[30,30],iconAnchor:[15,15]});
+            L.marker(pos,{icon:markerIcon,title:e.label+' '+e.clock}).addTo(map)
+              .bindPopup('<strong>'+e.label+'</strong><br>'+e.clock+' (Malta local time)');
+          }
+        }
+        const bounds=L.latLngBounds(segments.flat());
         map.fitBounds(bounds,{padding:[24,24]});
         // Recalculate after the GPX has been parsed and the layout has settled.
         requestAnimationFrame(()=>requestAnimationFrame(()=>{
@@ -208,7 +272,7 @@
         const first=segments[0][0],last=segments[segments.length-1].at(-1);
         L.circleMarker(first,{radius:7,color:'#fff',weight:2,fillColor:'#1c7d56',fillOpacity:1}).addTo(map).bindPopup('Start');
         L.circleMarker(last,{radius:7,color:'#fff',weight:2,fillColor:'#ad5e25',fillOpacity:1}).addTo(map).bindPopup('Finish');
-        status.textContent='Track loaded · '+segments.reduce((n,s)=>n+s.length,0).toLocaleString()+' GPS points. Scroll zoom is disabled; use the map controls to zoom.';
+        if(hasTimes)status.textContent='Track loaded · '+segments.reduce((n,s)=>n+s.length,0).toLocaleString()+' GPS points. Day/night positions assume an 08:00 start on 2 May 2025. Scroll zoom is disabled; use the map controls to zoom.';
       }catch(e){status.textContent='Map unavailable: '+e.message+' The GPX download above is still available.';}
     })();
   </script>
